@@ -3,6 +3,7 @@ package nsru.noknoi.puwanat.cartoonbook;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -55,6 +56,21 @@ public class CartoonActivity extends AppCompatActivity {
 
 
     }   //main method
+
+    public void clickConfirmOrder(View view) {
+
+        if (bolGuest) {
+            //user
+
+        } else {
+            //guest
+            MyAlert myAlert = new MyAlert();
+            myAlert.myDialog(this, "ยังไม่ได้Login",
+                    "กรุณาLoginก่อน");
+        }
+
+        //click confirm
+    }
 
     private void createListCartoon() {
         ConnectedCartoon connectedCartoon = new ConnectedCartoon(bolGuest, urlJSON, this);
