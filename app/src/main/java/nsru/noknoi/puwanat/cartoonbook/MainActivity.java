@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -20,66 +20,66 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    //explicit
+    //Explicit
     private MyManage myManage;
-    private static final String urlJSON = "http://swiftcodingthai.com/gun/get_user_gun.php";
+    private static final String urlJSON = "http://swiftcodingthai.com/gun/get_user_master.php";
     private EditText userEditText, passwordEditText;
     private String userString, passwordString;
-
+    private String[] userLoginStrings = new String[8];
+    private boolean statusLogin = false; // false ==> userFalse, true ==> haveUser
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Bing widget
+        //Bind Widget
         userEditText = (EditText) findViewById(R.id.editText7);
         passwordEditText = (EditText) findViewById(R.id.editText8);
 
-
-
         myManage = new MyManage(this);
 
-        //test add user
+        //Test Add User
 //        myManage.addNewUser("1", "name", "sur", "add", "phone", "user",
 //                "pass", "money");
 
-        //delete all SQLite
+        //Delete All SQLite
         deleteAllSQLite();
 
-        mySynchronizeJSON();
+        //mySynchronizeJSON();
 
-
-    }   //main method
+    }   // Main Method
 
     public void clickSignIn(View view) {
 
-        userEditText = userEditText.getText().toString().trim();
-        passwordEditText = passwordEditText.getText().toString().trim();
+        userString = userEditText.getText().toString().trim();
+        passwordString = passwordEditText.getText().toString().trim();
 
-        //check space
-        if (userString.equals("")|| passwordString.equals("")) {
+        //Check Space
+        if (userString.equals("") || passwordString.equals("")) {
 
             MyAlert myAlert = new MyAlert();
-            myAlert.myDialog(this,"มีช่องว่าง!!",
-                    "กรุณากรอกให้ครบทุกช่อง");
+            myAlert.myDialog(this, "มีช่องว่างคะ ?",
+                    "กรุณากรอกทุกช่อง คะ");
 
         } else {
             checkUserAnPassword();
         }
 
-    }   //click signin
+    }   // clickSignIn
 
     private void checkUserAnPassword() {
 
-    }   //check userandpass
+        ConnectedUSER connectedUSER = new ConnectedUSER(this, urlJSON);
+        connectedUSER.execute();
+
+
+    }   // checkUserAnPass
 
     private void mySynchronizeJSON() {
         ConnectedUSER connectedUSER = new ConnectedUSER(MainActivity.this, urlJSON);
         connectedUSER.execute();
     }
-
 
     private class ConnectedUSER extends AsyncTask<Void, Void, String> {
 
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected String doInBackground(Void... voids) {
 
             try {
 
@@ -102,17 +102,18 @@ public class MainActivity extends AppCompatActivity {
                 Response response = okHttpClient.newCall(request).execute();
                 return response.body().string();
 
-
             } catch (Exception e) {
                 return null;
             }
-           }   //dooInBack
+        }   // doInBack
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            Log.d("17JuneV1", "JSON ==>" + s);
+            Log.d("17JuneV1", "JSON ==> " + s);
+            Toast.makeText(context, "โหลดข้อมูล จาก Server เรียบร้อยแล้ว",
+                    Toast.LENGTH_SHORT).show();
 
             try {
 
@@ -120,43 +121,67 @@ public class MainActivity extends AppCompatActivity {
                 for (int i=0;i<jsonArray.length();i++) {
 
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    String strId = jsonObject.getString("id");
-                    String strName = jsonObject.getString("Name");
-                    String strSurname = jsonObject.getString("Surname");
-                    String strAddress = jsonObject.getString("Address");
-                    String strPhone = jsonObject.getString("Phone");
-                    String strUsername = jsonObject.getString("Username");
-                    String strPassword = jsonObject.getString("Password");
-                    String strMoney = jsonObject.getString("Money");
-                    myManage.addNewUser(strId, strName, strSurname, strAddress, strPhone,
-                            strUsername, strPassword, strMoney);
 
-                }      //for
+                    if (userString.equals(jsonObject.getString("User"))) {
 
-                Toast.makeText(context, "โหลดข้อมูลจาก Server เรียบร้อยแล้ว",
-                        Toast.LENGTH_SHORT).show();
+                        userLoginStrings[0] = jsonObject.getString("id");
+                        userLoginStrings[1] = jsonObject.getString("Name");
+                        userLoginStrings[2] = jsonObject.getString("Surname");
+                        userLoginStrings[3] = jsonObject.getString("Address");
+                        userLoginStrings[4] = jsonObject.getString("Phone");
+                        userLoginStrings[5] = jsonObject.getString("User");
+                        userLoginStrings[6] = jsonObject.getString("Password");
+                        userLoginStrings[7] = jsonObject.getString("Money");
+                        statusLogin = true;
+
+                    }   // if
+
+                }   //for
+
+                for (int i=0;i<userLoginStrings.length;i++) {
+                    Log.d("18Test", "userLogin (" + i + ") = " + userLoginStrings[i]);
+                }
+                Log.d("18Test", "statusLogin ==> " + statusLogin);
+
+                if (statusLogin) {
+                    //Check Password
+
+                    if (passwordString.equals(userLoginStrings[6])) {
+                        Toast.makeText(context, "Welcome " + userLoginStrings[1] + " " + userLoginStrings[2],
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        MyAlert myAlert = new MyAlert();
+                        myAlert.myDialog(context, "Password False",
+                                "Please Try Again Password False");
+                    }
+
+                } else {
+                    MyAlert myAlert = new MyAlert();
+                    myAlert.myDialog(context, "ไม่มี User นี้",
+                            "ไม่มี " + userString + " ในฐานข้อมูล ของเรา");
+                }
+
 
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
+        }   // onPost
 
-
-        }   //onPost
-    }   //AsyncTask Class
-
+    }   // AsyncTask Class
 
     private void deleteAllSQLite() {
 
         SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyOpenHelper.database_name,
                 MODE_PRIVATE, null);
         sqLiteDatabase.delete(MyManage.user_table, null, null);
-
     }
 
     public void clickSignUpMain(View view) {
-        startActivity(new Intent(MainActivity.this,SignUpActivity.class));
+        startActivity(new Intent(MainActivity.this, SignUpActivity.class));
     }
 
-}   //main class
+}   // Main Cla
+
+// ss

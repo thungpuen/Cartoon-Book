@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * Created by PC on 17/6/2559.
@@ -46,6 +47,8 @@ public class MyManage {
                     new String[]{String.valueOf(strUser)},
                     null, null, null, null);
 
+            resultString = new String[cursor.getColumnCount()];
+
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     for (int i=0;i<cursor.getColumnCount();i++) {
@@ -55,10 +58,11 @@ public class MyManage {
                 }
             }
             cursor.close();
-            return null;
+            return resultString;
 
 
         } catch (Exception e) {
+            Log.d("18June", "e = " + e.toString());
             return null;
         }
 
