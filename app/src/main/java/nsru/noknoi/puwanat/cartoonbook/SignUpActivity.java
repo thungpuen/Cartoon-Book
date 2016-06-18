@@ -1,7 +1,7 @@
 package nsru.noknoi.puwanat.cartoonbook;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
@@ -19,9 +19,9 @@ public class SignUpActivity extends AppCompatActivity {
 
     //Explicit
     private EditText nameEditText, surnameEditText, addressEditText,
-            phoneEditText, usernameEditText, passwordEditText;
-    private String nameString,surnameString, addressString,
-    phoneString, usernameString, passwordString;
+            phoneEditText, userEditText, passwordEditText;
+    private String nameString, surnameString, addressString,
+            phoneString, userString, passwordString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,44 +33,45 @@ public class SignUpActivity extends AppCompatActivity {
         surnameEditText = (EditText) findViewById(R.id.editText2);
         addressEditText = (EditText) findViewById(R.id.editText3);
         phoneEditText = (EditText) findViewById(R.id.editText4);
-        usernameEditText = (EditText) findViewById(R.id.editText5);
+        userEditText = (EditText) findViewById(R.id.editText5);
         passwordEditText = (EditText) findViewById(R.id.editText6);
 
 
-    }   //Main method
+    }   // Main Method
 
     public void clickSignUpSign(View view) {
 
-        //get value from edit text
+        //Get Value From Edit Text
         nameString = nameEditText.getText().toString().trim();
         surnameString = surnameEditText.getText().toString().trim();
         addressString = addressEditText.getText().toString().trim();
         phoneString = phoneEditText.getText().toString().trim();
-        usernameString = usernameEditText.getText().toString().trim();
+        userString = userEditText.getText().toString().trim();
         passwordString = passwordEditText.getText().toString().trim();
 
-        //check space
-        if (nameString.equals("")||
-                surnameString.equals("")||
-                addressString.equals("")||
-                phoneString.equals("")||
-                usernameString.equals("")||
+        //Check Space
+        if (nameString.equals("") ||
+                surnameString.equals("") ||
+                addressString.equals("") ||
+                phoneString.equals("") ||
+                userString.equals("") ||
                 passwordString.equals("")) {
-                //have space
+            //Have Space
             MyAlert myAlert = new MyAlert();
-            myAlert.myDialog(this, "มีช่องว่าง","" +
-                    "กรุณากรอกทุกช่อง");
+            myAlert.myDialog(this, "มีช่องว่าง",
+                    "กรุณากรอกทุกช่อง คะ");
 
         } else {
-                //No Space
+            //No Space
             uploadNewUserToServer();
         }
 
-    }   //click sign
+
+    }   // clickSign
 
     private void uploadNewUserToServer() {
 
-        String urlPost = "http://swiftcodingthai.com/gun/add_user_gun.php";
+        String urlPost = "http://swiftcodingthai.com/gun/add_user_master.php";
         OkHttpClient okHttpClient = new OkHttpClient();
         RequestBody requestBody = new FormEncodingBuilder()
                 .add("isAdd", "true")
@@ -78,7 +79,7 @@ public class SignUpActivity extends AppCompatActivity {
                 .add("Surname", surnameString)
                 .add("Address", addressString)
                 .add("Phone", phoneString)
-                .add("Username", usernameString)
+                .add("User", userString)
                 .add("Password", passwordString)
                 .build();
         Request.Builder builder = new Request.Builder();
@@ -92,11 +93,13 @@ public class SignUpActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Response response) throws IOException {
-                    finish();
+                finish();
             }
         });
 
-    }   //UPLOAD
 
 
-}   //Main Class
+    }   // upload
+
+
+}   // Main Class
