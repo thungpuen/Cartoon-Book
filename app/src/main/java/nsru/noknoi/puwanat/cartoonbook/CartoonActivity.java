@@ -1,6 +1,8 @@
 package nsru.noknoi.puwanat.cartoonbook;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +28,10 @@ public class CartoonActivity extends AppCompatActivity {
     private String[] loginStrings;
     private boolean bolGuest;
     private String urlJSON = "http://www.swiftcodingthai.com/gun/get_cartoon.php";
+    private String[] nameStrings, descripStrings, stockStrings,
+            priceStrings, iconStrings;
+    private String amountString, productIDString;
+
 
 
     @Override
@@ -67,6 +73,7 @@ public class CartoonActivity extends AppCompatActivity {
         private String urlJSONString;
         private boolean guestABoolean;
 
+
         public ConnectedCartoon(boolean guestABoolean,
                                 String urlJSONString,
                                 Context context) {
@@ -103,11 +110,11 @@ public class CartoonActivity extends AppCompatActivity {
 
                 JSONArray jsonArray = new JSONArray(s);
 
-                final String[] nameStrings = new String[jsonArray.length()];
-                String[] descripStrings = new String[jsonArray.length()];
-                String[] stockStrings = new String[jsonArray.length()];
-                String[] priceStrings = new String[jsonArray.length()];
-                String[] iconStrings = new String[jsonArray.length()];
+                nameStrings = new String[jsonArray.length()];
+                descripStrings = new String[jsonArray.length()];
+                stockStrings = new String[jsonArray.length()];
+                priceStrings = new String[jsonArray.length()];
+                iconStrings = new String[jsonArray.length()];
 
                 for (int i = 0; i < jsonArray.length(); i++) {
 
@@ -130,6 +137,7 @@ public class CartoonActivity extends AppCompatActivity {
 
                         if (guestABoolean) {
                             //from user
+                            confirmdialog((position + 1), nameStrings[position]);
 
                         } else {
                             //from guest
@@ -147,5 +155,40 @@ public class CartoonActivity extends AppCompatActivity {
 
         }   //onPost
     }   //Async class
+
+    private void confirmdialog(final int ProductID, String nameProduct) {
+
+        CharSequence[] charSequences = new CharSequence[]{"1 เล่ม", "2 เล่ม", "3 เล่ม", "4 เล่ม",
+                "5 เล่ม", "6 เล่ม", "7 เล่ม", "8 เล่ม", "9 เล่ม", "10 เล่ม"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle(nameProduct);
+        builder.setSingleChoiceItems(charSequences, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                    amountString = Integer.toString(i + 1);
+                Log.d("18TestV3", "ProductID ==> " + ProductID);
+                Log.d("18TestV3", "amountString ==> " + amountString);
+
+                MyManage myManage = new MyManage(CartoonActivity.this);
+                myManage.addOrder(Integer.toString(ProductID), amountString);
+
+
+                dialogInterface.dismiss();
+
+            }   //onClick
+        });
+        builder.setPositiveButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+            }
+        });
+        builder.show();
+
+
+    }   //confirm dialog
 
 }   //main class
