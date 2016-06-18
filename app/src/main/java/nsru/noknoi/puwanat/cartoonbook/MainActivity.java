@@ -39,14 +39,13 @@ public class MainActivity extends AppCompatActivity {
 
         myManage = new MyManage(this);
 
-        //Test Add User
-//        myManage.addNewUser("1", "name", "sur", "add", "phone", "user",
-//                "pass", "money");
+        //myManage.addOrder("proID", "amount");
+
 
         //Delete All SQLite
         deleteAllSQLite();
 
-        //mySynchronizeJSON();
+
 
     }   // Main Method
 
@@ -82,10 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
     }   // checkUserAnPass
 
-    private void mySynchronizeJSON() {
-        ConnectedUSER connectedUSER = new ConnectedUSER(MainActivity.this, urlJSON);
-        connectedUSER.execute();
-    }
+
 
     private class ConnectedUSER extends AsyncTask<Void, Void, String> {
 
@@ -188,7 +184,9 @@ public class MainActivity extends AppCompatActivity {
 
         SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyOpenHelper.database_name,
                 MODE_PRIVATE, null);
-        sqLiteDatabase.delete(MyManage.user_table, null, null);
+        sqLiteDatabase.delete(MyManage.order_table, null, null);
+
+
     }
 
     public void clickSignUpMain(View view) {
