@@ -13,6 +13,9 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class CartoonActivity extends AppCompatActivity {
 
     //Explicit
@@ -93,6 +96,36 @@ public class CartoonActivity extends AppCompatActivity {
             super.onPostExecute(s);
 
             Log.d("18TestV2", "JASON ==> " + s);
+
+            try {
+
+                JSONArray jsonArray = new JSONArray(s);
+
+                String[] nameStrings = new String[jsonArray.length()];
+                String[] descripStrings = new String[jsonArray.length()];
+                String[] stockStrings = new String[jsonArray.length()];
+                String[] priceStrings = new String[jsonArray.length()];
+                String[] iconStrings = new String[jsonArray.length()];
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    nameStrings[i] = jsonObject.getString("Name");
+                    descripStrings[i] = jsonObject.getString("Description");
+                    stockStrings[i] = jsonObject.getString("Stock");
+                    priceStrings[i] = jsonObject.getString("Price");
+                    iconStrings[i] = jsonObject.getString("Cover");     //ตัวหนังสือสีเขียวคือช่อคอลั่มในฐานข้อมูล
+
+
+                }   //for
+
+                CartoonAdapter cartoonAdapter = new CartoonAdapter(context,
+                        iconStrings, nameStrings, descripStrings, priceStrings, stockStrings);
+                listView.setAdapter(cartoonAdapter);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }   //onPost
     }   //Async class
