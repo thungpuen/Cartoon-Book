@@ -2,49 +2,34 @@ package nsru.noknoi.puwanat.cartoonbook;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ConfirmActivity extends AppCompatActivity {
 
-    //explicit
+    //Explicit
     private TextView nameTextView, surnameTextView,
             moneyTextView, dateTextView, grandTotalTextView;
     private ListView listView;
-    private String[] loginStrings, produckIDStrings, amountStrings,
-                        productNameStrings, productPriceStrings,
-                        totalStrings;
+    private String[] loginStrings, productIDStrings, amountStrings,
+            productNameStrings, productPriceStrings, totalStrings;
     private String dateString;
-    private static final String urlJSON = "http://www.swiftcodingthai.com/gun/get_product_where_id.php";
-
-
+    private static final String urlJSON = "http://swiftcodingthai.com/gun/get_product_where_id.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm);
 
-        //bind widget
+        //Bind Widget
         nameTextView = (TextView) findViewById(R.id.textView20);
         surnameTextView = (TextView) findViewById(R.id.textView21);
         moneyTextView = (TextView) findViewById(R.id.textView22);
@@ -52,25 +37,65 @@ public class ConfirmActivity extends AppCompatActivity {
         grandTotalTextView = (TextView) findViewById(R.id.textView28);
         listView = (ListView) findViewById(R.id.listView2);
 
-        //current Date
+        //Current Date
         DateFormat dateFormat = new SimpleDateFormat("dd/mm/yy");
         Date date = new Date();
         dateString = dateFormat.format(date);
 
-        //Show view
+        //Show View
         loginStrings = getIntent().getStringArrayExtra("Login");
         nameTextView.setText(loginStrings[1]);
         surnameTextView.setText(loginStrings[2]);
         moneyTextView.setText(loginStrings[7]);
         dateTextView.setText(dateString);
 
-        //create listview
+        //Create ListView
         createListView();
 
-    }   //main method
+
+    }   // Main Method
 
     private void createListView() {
 
+        SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyOpenHelper.database_name,
+                MODE_PRIVATE, null);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM orderTABLE", null);
+        cursor.moveToFirst();
+
+        productIDStrings = new String[cursor.getCount()];
+        amountStrings = new String[cursor.getCount()];
+        productNameStrings = new String[cursor.getCount()];
+        productPriceStrings = new String[cursor.getCount()];
+        totalStrings = new String[cursor.getCount()];
+
+        for (int i=0;i<cursor.getCount();i++) {
+
+            productIDStrings[i] = cursor.getString(cursor.getColumnIndex("ProductID"));
+            amountStrings[i] = cursor.getString(cursor.getColumnIndex("Amount"));
+            productNameStrings[i] = mySearch(0, productIDStrings[i]);
+
+
+            Log.d("19JuneV5", "productName(" + i + ") = " + productNameStrings[i]);
+            cursor.moveToNext();
+        }   // for
+
+
+
+    }   // createListView
+
+    private String mySearch(int intIndex, String productIDString) {
+
+        String result = null;
+        String[] columnStrings = new String[]{"Name", "Price"};
+
+        SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyOpenHelper.database_name,
+                MODE_PRIVATE, null);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM productTABLE WHERE _id = " + "'" + productIDString + "'", null);
+        cursor.moveToFirst();
+
+        result = cursor.getString(cursor.getColumnIndex(columnStrings[intIndex]));
+
+        return result;
     }
 
 
@@ -80,6 +105,6 @@ public class ConfirmActivity extends AppCompatActivity {
 
     public void clickOrder(View view) {
 
-    }   //clickOrder
+    }   // clickOrder
 
-}   //main class
+}   // Main Class
