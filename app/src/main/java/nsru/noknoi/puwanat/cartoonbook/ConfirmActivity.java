@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -57,9 +58,9 @@ public class ConfirmActivity extends AppCompatActivity {
 
     private void createListView() {
 
-        SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyOpenHelper.database_name,
+        final SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyOpenHelper.database_name,
                 MODE_PRIVATE, null);
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM orderTABLE", null);
+        final Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM orderTABLE", null);
         cursor.moveToFirst();
 
         productIDStrings = new String[cursor.getCount()];
@@ -85,12 +86,30 @@ public class ConfirmActivity extends AppCompatActivity {
             Log.d("19JuneV5", "productName(" + i + ") = " + productNameStrings[i]);
             cursor.moveToNext();
         }   // for
-
         cursor.close();
+
 
         ConfirmAdapter confirmAdapter = new ConfirmAdapter(this, productNameStrings, productPriceStrings,
                 amountStrings, totalStrings);
         listView.setAdapter(confirmAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                SQLiteDatabase sqLiteDatabase1 = openOrCreateDatabase(MyOpenHelper.database_name,
+                        MODE_PRIVATE, null);
+                Cursor cursor1 = sqLiteDatabase1.rawQuery("SELECT * FROM orderTABLE", null);
+                cursor1.moveToFirst();
+                cursor1.moveToPosition(position);
+                Log.d("19JuneV6", "Position " + position + "id = " + cursor1.getString(0));
+
+                sqLiteDatabase1.delete(MyManage.order_table, "_id" + "=" + Integer.parseInt(cursor1.getString(0)), null);
+
+                createListView();
+
+            }   //onitemclick
+        });
 
 
 
