@@ -18,6 +18,12 @@ public class MyOpenHelper extends SQLiteOpenHelper{
             "ProductID text," +
             "Amount text);";
 
+    private static final String create_product_table = "create table productTABLE(" +
+            "_id integer primary key," +
+            "Name text," +
+            "Price text," +
+            "Stock text);";
+
 
     public MyOpenHelper(Context context) {
         super(context, database_name, null, database_version);
@@ -26,6 +32,7 @@ public class MyOpenHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
        sqLiteDatabase.execSQL(create_order_table);
+        sqLiteDatabase.execSQL(create_product_table);
     }
 
     @Override

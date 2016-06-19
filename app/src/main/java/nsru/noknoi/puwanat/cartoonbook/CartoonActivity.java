@@ -145,6 +145,7 @@ public class CartoonActivity extends AppCompatActivity {
 
                 JSONArray jsonArray = new JSONArray(s);
 
+                String[] idStrings = new String[jsonArray.length()];
                 nameStrings = new String[jsonArray.length()];
                 descripStrings = new String[jsonArray.length()];
                 stockStrings = new String[jsonArray.length()];
@@ -154,11 +155,16 @@ public class CartoonActivity extends AppCompatActivity {
                 for (int i = 0; i < jsonArray.length(); i++) {
 
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    idStrings[i] = jsonObject.getString("id");
                     nameStrings[i] = jsonObject.getString("Name");
                     descripStrings[i] = jsonObject.getString("Description");
                     stockStrings[i] = jsonObject.getString("Stock");
                     priceStrings[i] = jsonObject.getString("Price");
                     iconStrings[i] = jsonObject.getString("Cover");     //ตัวหนังสือสีเขียวคือช่อคอลั่มในฐานข้อมูล
+
+                    MyManage myManage = new MyManage(context);
+                    myManage.addProduct(idStrings[i], nameStrings[i],
+                            priceStrings[i], stockStrings[i]);
 
                 }   //for
 
