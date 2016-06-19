@@ -81,6 +81,7 @@ public class ConfirmActivity extends AppCompatActivity {
             totalStrings[i] = Integer.toString(intTotal);
 
 
+
             Log.d("19JuneV5", "productName(" + i + ") = " + productNameStrings[i]);
             cursor.moveToNext();
         }   // for
