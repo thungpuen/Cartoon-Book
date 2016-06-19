@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -61,6 +63,18 @@ public class CartoonActivity extends AppCompatActivity {
 
         if (bolGuest) {
             //user
+            SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyOpenHelper.database_name,
+                    MODE_PRIVATE, null);
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM orderTABLE", null);
+
+
+            if (cursor.getCount() > 0) {
+
+            } else {
+                MyAlert myAlert = new MyAlert();
+                myAlert.myDialog(this, "ยังไม่มีสินค้า",
+                "กรุณาเลือก สินค้าก่อนคะ");
+            }
 
         } else {
             //guest
