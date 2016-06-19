@@ -157,7 +157,7 @@
                 android:text="Product"
                 android:id="@+id/textView24"
                 android:textSize="@dimen/h2"
-                android:layout_weight="1.5"
+                android:layout_weight="1.8"
                 android:textStyle="bold"
                 android:textColor="@color/text" />
 
@@ -178,7 +178,7 @@
                 android:text="Amount"
                 android:id="@+id/textView26"
                 android:textSize="@dimen/h2"
-                android:layout_weight="1"
+                android:layout_weight="1.2"
                 android:gravity="center_horizontal"
                 android:textStyle="bold"
                 android:textColor="@color/text" />

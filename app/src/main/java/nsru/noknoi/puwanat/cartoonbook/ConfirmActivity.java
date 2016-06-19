@@ -1,11 +1,26 @@
 package nsru.noknoi.puwanat.cartoonbook;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,8 +31,12 @@ public class ConfirmActivity extends AppCompatActivity {
     private TextView nameTextView, surnameTextView,
             moneyTextView, dateTextView, grandTotalTextView;
     private ListView listView;
-    private String[] loginStrings;
+    private String[] loginStrings, produckIDStrings, amountStrings,
+                        productNameStrings, productPriceStrings,
+                        totalStrings;
     private String dateString;
+    private static final String urlJSON = "http://www.swiftcodingthai.com/gun/get_product_where_id.php";
+
 
 
     @Override
@@ -45,9 +64,14 @@ public class ConfirmActivity extends AppCompatActivity {
         moneyTextView.setText(loginStrings[7]);
         dateTextView.setText(dateString);
 
+        //create listview
+        createListView();
 
+    }   //main method
 
-    }   //method
+    private void createListView() {
+    }
+
 
     public void clickAddMore(View view) {
         finish();
