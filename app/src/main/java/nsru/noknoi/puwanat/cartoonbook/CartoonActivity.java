@@ -3,6 +3,7 @@ package nsru.noknoi.puwanat.cartoonbook;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -69,6 +70,10 @@ public class CartoonActivity extends AppCompatActivity {
 
 
             if (cursor.getCount() > 0) {
+
+                Intent intent = new Intent(CartoonActivity.this, ConfirmActivity.class);
+                intent.putExtra("Login", loginStrings);
+                startActivity(intent);
 
             } else {
                 MyAlert myAlert = new MyAlert();
